@@ -42,6 +42,8 @@ function [Lba, Aat, Aad, Aac, dct, dcr, dtm, dlm] = tl_anomalous_reflection(f, d
 %     Rev   Date        Author                          Description
 %     -------------------------------------------------------------------------------
 %     v0    15JUL16     Ivica Stevanovic, OFCOM         Initial version 
+%     v1    28OCT19     Ivica Stevanovic, OFCOM         Changes in angular distance dependent loss according to ITU-R P.2001-3
+%  
 
 
 %% 
@@ -160,6 +162,7 @@ if (omega >= 0.75)
 
 end
 
+
 %% D.5 Total coupling loss to the anomalous propagation mechanism
 
 % Empirical correction to account for the increasing attenuation with
@@ -194,9 +197,13 @@ theta_ar = min(thetar, grr);  % mrad
 
 theta_a = 1000*dt/ae + theta_at + theta_ar; % mrad
 
-% Angular-distance dependent loss (D.6.4)
+% Angular-distance dependent loss (D.6.4a,b)
+Aad = 0;  
 
-Aad = gammad * theta_a;
+if (theta_a > 0)
+    Aad = gammad * theta_a;
+end
+    
 
 %% D.7 Distance and time-dependent loss
 

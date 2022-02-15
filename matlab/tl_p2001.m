@@ -173,6 +173,9 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %     v2    13JUN17     Ivica Stevanovic, OFCOM         Replaced load function calls to increase computational speed
 %     v3    26APR18     Ivica Stevanovic, OFCOM         Declared empty arrays G and P for no-rain path and 
 %                                                       included additional validation checks
+%     v4    28OCT19     Ivica Stevanovic, OFCOM         Changes in angular distance dependent loss according to ITU-R P.2001-3
+%                                                       (in tl_anomalous_reflection.m)
+
 
 %%
 
@@ -197,43 +200,38 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 c0 = 2.998e8;
 Re = 6371;
 
-try
-    
-    s = pwd;
-    if ~exist('great_circle_path.m','file')
-        addpath([s '/src/'])
-    end
-    
-    
-    %% 3.1 Limited percentage time
-    
-    Tpcp = Tpc + 0.00001*(50-Tpc)/50;      % Eq (3.1.1)
-    Tpcq = 100 - Tpcp;                     % Eq (3.1.2)
-    
-    % Ensure that vector d is ascending
-    if (~issorted(d))
-        error('The array of path profile points d(i) must be in ascending order.');
-    end
-    % Ensure that d(1) = 0 (Tx position)
-    if d(1) > 0
-        error (['The first path profile point d(1) = ' num2str(d(1)) ' must be zero.']);
-    end
-    
-    % 3.2 Path length, intermediate points, and fraction over sea
-    
-    dt = d(end);                        % Eq (3.2.1)
-    
-    % make sure that there is enough points in the path profile
-    if (length(d) <= 10)
-        error('The number of points in path profile should be larger than 10');
-    end
-    
-catch
-    error('Folder ./src/ does not appear to be on the MATLAB search path.');
+
+s = pwd;
+if ~exist('p838.m','file')
+    addpath([s '/src/'])
+end
+
+
+%% 3.1 Limited percentage time
+
+Tpcp = Tpc + 0.00001*(50-Tpc)/50;      % Eq (3.1.1)
+Tpcq = 100 - Tpcp;                     % Eq (3.1.2)
+
+% Ensure that vector d is ascending
+if (~issorted(d))
+    error('The array of path profile points d(i) must be in ascending order.');
+end
+% Ensure that d(1) = 0 (Tx position)
+if d(1) > 0
+    error (['The first path profile point d(1) = ' num2str(d(1)) ' must be zero.']);
+end
+
+% 3.2 Path length, intermediate points, and fraction over sea
+
+dt = d(end);                        % Eq (3.2.1)
+
+% make sure that there is enough points in the path profile 
+if (length(d) <= 10)
+    error('The number of points in path profile should be larger than 10');
 end
 
 if ~isempty(find(~(z==1 | z == 3 | z == 4 )))
-    error ('The vector of zones z may contain only integers 1, 3, or 4, for sea, coastal, and inland, resp.');
+    error ('The vector of zones z may contain only integers 1, 3, or 4.');
 end
 
 if ~(Tpc> 0 && Tpc <100)
@@ -254,7 +252,7 @@ else
     FlagShort = 0;
 end
 
-% Calculate the longitude and latitude of the mid-point o the path, Phime,
+% Calculate the longitude and latitude of the mid-point of the path, Phime,
 % and Phimn for dpnt = 0.5dt
 
 dpnt = 0.5*dt;
