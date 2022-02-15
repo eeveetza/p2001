@@ -9,7 +9,7 @@ function [theta_t, theta_r, theta_tpos, theta_rpos, dlt, dlr, lt, lr, hstip, hsr
 % h         -   vector of terrain profile heights amsl (m)
 % hts, hrs  -   Tx and Rx antenna heights above means sea level (m)
 %               hts = htg + h(1), hrs = hrg + h(end)
-% ae        -   median effective Earth's radius 
+% ae        -   median effective Earth's radius
 % lam       -   wavelength (m)
 %
 % Output parameters:
@@ -39,8 +39,8 @@ function [theta_t, theta_r, theta_tpos, theta_rpos, dlt, dlr, lt, lr, hstip, hsr
 %
 % Rev   Date        Author                          Description
 % -------------------------------------------------------------------------------
-% v0    15JAN16     Ivica Stevanovic, OFCOM         First implementation in matlab (P.452) 
-% v1    15JUN16     Ivica Stevanovic, OFCOM         Modifications related to LoS path (P.452) 
+% v0    15JAN16     Ivica Stevanovic, OFCOM         First implementation in matlab (P.452)
+% v1    15JUN16     Ivica Stevanovic, OFCOM         Modifications related to LoS path (P.452)
 % v3    15JUN16     Ivica Stevanovic, OFCOM         Initial version for P.1812
 % v4    13JUL16     Ivica Stevanovic, OFCOM         Initial version for P.2001
 
@@ -63,17 +63,18 @@ theta_tim =   max( (h(ii)-hts)./d(ii) - 500*d(ii)/ae );
 % Elevation angle of the receiver as viewed by the transmitter, assuming a
 % LoS path (3.7.2)
 
-theta_tr = (hrs - hts)/dtot - 500*dtot/ae;
+theta_tr = (hrs - hts)/dtot - 500*dtot/ae; %
+
 
 if theta_tim < theta_tr % path is LoS
     FlagLos50 = 1;
     nu = (h(ii) + 500*d(ii).*(dtot-d(ii))./ae - (hts*(dtot- d(ii)) + hrs *d(ii))/dtot).* ...
-         sqrt(0.002*dtot./(lam*d(ii).*(dtot-d(ii))));             % Eq (3.7.3)
+        sqrt(0.002*dtot./(lam*d(ii).*(dtot-d(ii))));             % Eq (3.7.3)
     
     numax = max(nu);
     
     kindex = find(nu == numax);
-    lt = kindex(end)+1;     %in order to map back to path d indices, as theta takes path indices 2 to n-1, 
+    lt = kindex(end)+1;     %in order to map back to path d indices, as theta takes path indices 2 to n-1,
     dlt = d(lt);                                % Eq (3.7.4a)
     dlr = dtot - dlt;                           % Eq (3.7.4b)
     lr = lt;                                    % Eq (3.7.4d)
@@ -85,9 +86,9 @@ else
     FlagLos50 = 0;
     % Transmitter hoizon distance and profile index of the horizon point (3.7.6)
     
-    theta_ti =   ( (h(ii)-hts)./d(ii) - 500*d(ii)/ae );
+    theta_ti =    (h(ii)-hts)./d(ii) - 500*d(ii)/ae ;
     kindex = find(theta_ti == theta_tim);
-    lt = kindex(end)+1;     %in order to map back to path d indices, as theta takes path indices 2 to n-1, 
+    lt = kindex(end)+1;     %in order to map back to path d indices, as theta takes path indices 2 to n-1,
     dlt = d(lt);                                % Eq (3.7.6a)
     
     % Transmitter horizon elevation angle reltive to its local horizontal (3.7.7)
@@ -97,12 +98,13 @@ else
     % relative to the horizontal at the receiver (3.7.8)
     
     theta_ri =   ( (h(ii)-hrs)./(dtot-d(ii)) - 500*(dtot-d(ii))/ae );
+    
     theta_rim = max(theta_ri);
     kindex = find(theta_ri == theta_rim);
-    lr = kindex(end)+1;     %in order to map back to path d indices, as theta takes path indices 2 to n-1, 
+    lr = kindex(end)+1;     %in order to map back to path d indices, as theta takes path indices 2 to n-1,
     dlr = dtot-d(lr);                           % Eq (3.7.9)
     
-    % receiver horizon elevatio nangle relative to its local horizontal 
+    % receiver horizon elevatio nangle relative to its local horizontal
     theta_r = theta_rim;                        % Eq (3.7.10)
 end
 
@@ -141,7 +143,7 @@ hsripa = min(hsrip,h(end));             % Eq (3.8.4b)
 
 % The slope of the least-squares regression fit (3.8.5)
 
-mses =(hsripa-hstipa)/dtot;             
+mses =(hsripa-hstipa)/dtot;
 
 % effective heights of Tx and Rx antennas above the smooth surface (3.8.6)
 
@@ -152,7 +154,7 @@ hrea = hrs-hsripa;
 
 ii = lt:1:lr;
 
-hm = max(h(ii) - (hstipa + mses*d(ii)));              
+hm = max(h(ii) - (hstipa + mses*d(ii)));
 
 % Smooth-surface heights for the diffraction model
 
@@ -190,7 +192,7 @@ end
 % The terminal effective heigts for the ducting/layer-reflection model
 
 htep = hts - hst;                            % Eq (3.8.11a)
-hrep = hrs - hsr;                            % Eq (3.8.11b)                      
+hrep = hrs - hsr;                            % Eq (3.8.11b)
 
 return
 end
