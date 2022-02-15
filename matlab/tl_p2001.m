@@ -1,9 +1,9 @@
 function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Htg, Grx, Gtx, FlagVP) 
-%tl_p2001 WRPM in the frequency range 30 MHz to 50 GHz ITU-R P.2001-2
+%tl_p2001 WRPM in the frequency range 30 MHz to 50 GHz ITU-R P.2001-4
 %   This function computes path loss due to both signal enhancements and fading 
 %   over the range from 0% to 100% of an average year according to the
 %   general purpose wide-range model as described in Recommendation ITU-R
-%   P.2001-2. The model covers the frequency range from 30 MHz to 50 GHz
+%   P.2001-4. The model covers the frequency range from 30 MHz to 50 GHz
 %   and it is most accurate for distances from 3 km to at least 1000 km.
 %   There is no specific lower limit, although the path length 
 %   must be greater than zero. A prediction of basic transmission loss less 
@@ -175,6 +175,9 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %                                                       included additional validation checks
 %     v4    28OCT19     Ivica Stevanovic, OFCOM         Changes in angular distance dependent loss according to ITU-R P.2001-3
 %                                                       (in tl_anomalous_reflection.m)
+%     v4    13JUL21     Ivica Stevanovic, OFCOM         Changes in free-space loss according to ITU-R P.2001-4
+%                                                       Renaming subfolder "src" into "private" which is automatically in the MATLAB search path
+%                                                       (as suggested by K. Konstantinou, Ofcom UK)   
 
 
 %%
@@ -191,7 +194,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %
 % THE AUTHOR(S) AND OFCOM (CH) DO NOT PROVIDE ANY SUPPORT FOR THIS SOFTWARE
 %
-% This function calls other functions that are placed in the ./src folder
+% This function calls other functions that are placed in the ./private folder
 
 
 
@@ -201,10 +204,10 @@ c0 = 2.998e8;
 Re = 6371;
 
 
-s = pwd;
-if ~exist('p838.m','file')
-    addpath([s '/src/'])
-end
+% s = pwd;
+% if ~exist('p838.m','file')
+%     addpath([s '/src/'])
+% end
 
 
 %% 3.1 Limited percentage time
@@ -444,9 +447,11 @@ A1 = Aiter(Tpcq, Q0ca, Q0ra, flagtropo, a, b, c, dr, kmod, alpha_mod, Gm, Pm, fl
 % Calculate the sub-model 1 basic transmission loss not exceeded for p%
 % time
 
-Lbfs = tl_free_space(GHz, dt);                              % Eq (3.11.1)
+% Lbfs = tl_free_space(GHz, dt);                              % Eq (3.11.1)
+dfs = sqrt(dt^2 + ((Hts- Hrs)/1000)^2);
+Lbfs = tl_free_space(GHz, dfs);                               % Eq (3.11.1)
 
-Lbm1 = Lbfs + Ld + A1 + Fwvr*(Awrsur - Awsur) + Agsur;      % Eq (4.1.4)
+Lbm1 = Lbfs + Ld + A1 + Fwvr*(Awrsur - Awsur) + Agsur;        % Eq (4.1.4)
 
 %% Sub-model 2. Anomalous propagation
 
