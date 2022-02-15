@@ -19,7 +19,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 % d           km    float   (2.1a)  Distance from transmitter of i-th profile point          
 % h           m     float   (2.1b)  Height of i-th profile point (amsl)
 % z           z     int     (2.1c)  Zone code at distance di from transmitter 
-%                                   (0 = Sea, 3 = Coastal Land, 4 = Inland) 
+%                                   (1 = Sea, 3 = Coastal Land, 4 = Inland) 
 % GHz	      GHz	float	T.2.2.1	Frequency
 % Tpc         %     float	T.2.2.1	Percentage of average year for which the predicted basic transmission loss is not exceeded
 % Phire       deg	float	T.2.2.1	Receiver longitude, positive to east
@@ -170,8 +170,10 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %     -------------------------------------------------------------------------------
 %     v0    19JUL16     Ivica Stevanovic, OFCOM         Initial version
 %     v1    29MAY17     Ivica Stevanovic, OFCOM         Corrected a bug (typo) in dl_bull_smooth
-%     v2    13JUN17     Ivica Stevanovic, OFCOM         replaced load function calls to increase computational speed
-%   
+%     v2    13JUN17     Ivica Stevanovic, OFCOM         Replaced load function calls to increase computational speed
+%     v3    26APR18     Ivica Stevanovic, OFCOM         Declared empty arrays G and P for no-rain path and 
+%                                                       included additional validation checks
+
 %%
 
 % MATLAB Version 8.3.0.532 (R2014a) used in development of this code
@@ -195,22 +197,56 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 c0 = 2.998e8;
 Re = 6371;
 
-
-s = pwd;
-if ~exist('great_circle_path.m','file')
-    addpath([s '/src/'])
+try
+    
+    s = pwd;
+    if ~exist('great_circle_path.m','file')
+        addpath([s '/src/'])
+    end
+    
+    
+    %% 3.1 Limited percentage time
+    
+    Tpcp = Tpc + 0.00001*(50-Tpc)/50;      % Eq (3.1.1)
+    Tpcq = 100 - Tpcp;                     % Eq (3.1.2)
+    
+    % Ensure that vector d is ascending
+    if (~issorted(d))
+        error('The array of path profile points d(i) must be in ascending order.');
+    end
+    % Ensure that d(1) = 0 (Tx position)
+    if d(1) > 0
+        error (['The first path profile point d(1) = ' num2str(d(1)) ' must be zero.']);
+    end
+    
+    % 3.2 Path length, intermediate points, and fraction over sea
+    
+    dt = d(end);                        % Eq (3.2.1)
+    
+    % make sure that there is enough points in the path profile
+    if (length(d) <= 10)
+        error('The number of points in path profile should be larger than 10');
+    end
+    
+catch
+    error('Folder ./src/ does not appear to be on the MATLAB search path.');
 end
 
+if ~isempty(find(~(z==1 | z == 3 | z == 4 )))
+    error ('The vector of zones z may contain only integers 1, 3, or 4, for sea, coastal, and inland, resp.');
+end
 
-%% 3.1 Limited percentage time
+if ~(Tpc> 0 && Tpc <100)
+   error ('The percentage of the average year Tpc must be in the range (0, 100)');
+end
 
-Tpcp = Tpc + 0.00001*(50-Tpc)/50;      % Eq (3.1.1)
-Tpcq = 100 - Tpcp;                     % Eq (3.1.2)
+if (Htg <=0 || Hrg <= 0)
+    error('The antenna heights above ground Htg and Hrg must be positive.');
+end
 
-
-% 3.2 Path length, intermediate points, and fraction over sea
-
-dt = d(end);                        % Eq (3.2.1)
+if ~(FlagVP == 0 || FlagVP ==1)
+    error('The polarization FlagVP can be either 0 (horizontal) or 1 (vertical).');
+end
 
 if dt < 0.1
     FlagShort = 1;
