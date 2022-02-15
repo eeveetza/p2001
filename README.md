@@ -2,7 +2,7 @@
 
 This code repository contains a MATLAB/Octave software implementation of [Recommendation ITU-R P.2001-2](https://www.itu.int/rec/R-REC-P.2001/en) with a general purpose wide-range terrestrial propagation model in the frequency range 30 MHz to 50 GHz.  
 
-This version of the code is superseded by the new reference version. 
+This version of the code is superseded by the reference version approved by ITU-R Working Party 3M and published by Study Group 3 on [ITU-R SG 3 Software, Data, and Validation Web Page](https://www.itu.int/en/ITU-R/study-groups/rsg3/Pages/iono-tropo-spheric.aspx) as digital supplement to [Recommendation ITU-R P.2001](https://www.itu.int/rec/R-REC-P.2001/en).
 
 The following table describes the structure of the folder `./matlab/` containing the MATLAB/Octave implementation of Recommendation ITU-R P.2001.
 
@@ -10,7 +10,8 @@ The following table describes the structure of the folder `./matlab/` containing
 |----------------------------|---------------------------------------------------------------------|
 |`tl_p2001.m`                | MATLAB function implementing Recommendation ITU-R P.2001-2         |           
 |`validate_p2001_b2iseac.m`  `validate_p2001_prof4.m`                | MATLAB scripts used to validate this implementation using a set of test terrain profiles provided in `./validation_results/`         |   
-|`./validation/`    | Folder containing validation examples for Recommendation ITU-R P.2001-2 |
+|`./validation_examples/`    | Folder containing validation examples for Recommendation ITU-R P.2001-2 |
+|`./validation_results/`	   | Folder containing the results of the validation tests using `tl_p2001.m` on the terrain profiles that corespond to the profiles defined in `./validation_examples/` |
 |`./src/`   |             Folder containing the functions called by `tl_2001.m` and `validate_p2001*.m`|
 
 ## Function Call
