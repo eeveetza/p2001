@@ -33,6 +33,7 @@ function [a, b, c, dr, Q0ra, Fwvr, kmod, alpha_mod, G, P, flagrain] = precipitat
 %     -------------------------------------------------------------------------------
 %     v0    15JUL16     Ivica Stevanovic, OFCOM         Initial version
 %     v1    13JUN17     Ivica Stevanovic, OFCOM         replaced load calls to increase computational speed
+%     v2    07MAR18     Ivica Stevanovic, OFCOM         declared empty arrays G and P for no-rain path
 
 %% C.2 Precipitation fading: Preliminary calculations
 
@@ -112,6 +113,8 @@ if (Pr6 == 0 || h_rainlo >= hRtop)
     alpha_mod = [];
     Gm = [];
     Pm = [];
+    G = Gm;
+    P = Pm;
     
 else % the path is classified as rain
     
