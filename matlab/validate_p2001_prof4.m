@@ -1,4 +1,4 @@
-fName = 'validation/Validation examples ITU-R P.2001 prof4 OFCOM.xlsx';
+fName = 'validation_results/Validation examples ITU-R P.2001 prof4 OFCOM.xlsx';
 frequency = [0.03 0.2 2 20 50];
 Page      = {'Page1', 'Page2', 'Page3', 'Page4', 'Page5'};
 Tpc_array = [0.001
@@ -459,21 +459,28 @@ Phitn = -35.691667;
 Tpc = 0.001;
 Profile = 'Prof4';
 
-s = pwd;
-if ~exist('great_circle_path.m','file')
-    addpath([s '/src/'])
+try
+    
+    s = pwd;
+    if ~exist('DigitalMaps_DN_Median.m','file')
+        addpath([s '/src/'])
+    end
+    
+    if ~exist('prof4.m','file')
+        addpath([s '/validation_results/'])
+    end
+    
+    % immediate printing to command window in octave
+    if (isOctave)
+        pkg load windows;
+        pkg load io;
+        page_screen_output(0);
+        page_output_immediately(1);
+    end
+    
+catch
+    error('Folder ./src/ does not appear to be on the MATLAB search path.');
 end
-
-if ~exist('prof4.m','file')
-    addpath([s '/validation/'])
-end
-
-% immediate printing to command window in octave
-if (isOctave)
-    page_screen_output(0);
-    page_output_immediately(1);
-end
-
 [d,h,z] = prof4();
 
  for fcnt = 1:length(frequency)
@@ -527,7 +534,7 @@ end
          r1 = tpccnt + 1;
 
      end
-    xlswrite(fName,A, pg)
+    xlswrite(fName,A, pg);
  end
  
  
@@ -549,4 +556,4 @@ for i = 1:length(d)
     B = [B; row];
 end
 
-xlswrite(fName,B, Profile)
+xlswrite(fName,B, Profile);

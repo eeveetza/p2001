@@ -1,4 +1,4 @@
-fName = 'validation/Validation examples ITU-R P.2001 b2iseac OFCOM.xlsx';
+fName = 'validation_results/Validation examples ITU-R P.2001 b2iseac OFCOM.xlsx';
 frequency = [0.03 0.2 2 20 50];
 Page      = {'Page1', 'Page2', 'Page3', 'Page4', 'Page5'};
 Tpc_array = [0.001
@@ -459,24 +459,29 @@ Phitn = 53.1833333333;
 Tpc = 0.001;
 Profile = 'Prof_b2iseac';
 
-s = pwd;
-
-if ~exist('prof_b2iseac.m','file')
-    addpath([s '/validation/'])
-end
-
-
-[d,h,z] = prof_b2iseac();
-
-if ~exist('great_circle_path.m','file')
-    addpath([s '/src/'])
-end
-
-if (isOctave)
-    pkg load windows;
-    pkg load io;
-    page_screen_output(0);
-    page_output_immediately(1);
+try
+    s = pwd;
+    
+    if ~exist('prof_b2iseac.m','file')
+        addpath([s '/validation_results/'])
+    end
+    
+    
+    [d,h,z] = prof_b2iseac();
+    
+    if ~exist('DigitalMaps_DN_Median.m','file')
+        addpath([s '/src/'])
+    end
+    
+    if (isOctave)
+        pkg load windows;
+        pkg load io;
+        page_screen_output(0);
+        page_output_immediately(1);
+    end
+    
+catch
+    error('Folder ./src/ does not appear to be on the MATLAB search path.');
 end
 
  for fcnt = 1:length(frequency)
