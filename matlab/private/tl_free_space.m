@@ -5,7 +5,7 @@ function Lbfs = tl_free_space(f,d)
 %
 %     Input parameters:
 %     f       -   Frequency (GHz)
-%     d       -   Distance (km)
+%     d       -   3D Distance (km)
 %
 %     Output parameters:
 %     Lbfs    -   Free-space basic transmission loss (dB)

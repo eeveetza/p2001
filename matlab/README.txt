@@ -57,7 +57,12 @@ Version 3.1 (28.10.19)
 Version 3 (28.06.18)
         - Corrections according to feedback obtained from CG 3J-3M-13:
             - Declared empty arrays G and P for no-rain path (precipitation_fade_initial.m)
-            - Introduced additional validation checks for input arguments  
+            - Introduced additional validation checks for input arguments
+	- Validation examples are recreated to account for the change in calculation of angular distance dependent loss 
+          according to ITU-R P.2001-3
+	- Restructured and improved the tests 
+        - Included octave specific commands for reading/writing xlsx data.
+        - Included script compare_results_vs_reference.m
 
 Version 2 (11.08.17)
         - Corrected a bug (typo) in dl_bull_smooth
@@ -82,7 +87,7 @@ No patent licence is granted, nor is a patent licensing commitment made, by impl
 
 Disclaimer: Other than as expressly provided herein,
 
-(1) the Software is provided "AS IS"� WITH NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO,
+(1) the Software is provided "AS IS" WITH NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO,
 THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGMENT OF INTELLECTUAL PROPERTY RIGHTS and
 
 (2) neither the Software Copyright Holder (or its affiliates) nor the ITU shall be held liable in any event for any damages whatsoever
