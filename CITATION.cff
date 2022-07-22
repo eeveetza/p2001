@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: 'MATLAB/Octave Implementation of Recommendation ITU-R P.2001-3'
+title: 'MATLAB/Octave Implementation of Recommendation ITU-R P.2001-4'
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -13,4 +13,4 @@ authors:
     orcid: 'https://orcid.org/0000-0002-5032-1844'
 doi: 10.5281/zenodo.6141608
 url: https://github.com/eeveetza/p2001
-version: 3.0
+version: 4.0
