@@ -1,4 +1,4 @@
-# MATLAB/Octave Implementation of Recommendation ITU-R P.2001-4
+# MATLAB/Octave Implementation of Recommendation ITU-R P.2001
 
 [![DOI](https://zenodo.org/badge/459560677.svg)](https://zenodo.org/badge/latestdoi/459560677)
 
