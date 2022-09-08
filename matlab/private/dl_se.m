@@ -76,12 +76,9 @@ else
         
         Ldft = dl_se_ft(d, hte, hre, aem, f, omega);
         
-        if Ldft < 0
-            Ldsph = [0 0];
-            return
-        else
-            Ldsph = (1- hse/hreq)*Ldft;     % Eq (A.2.5)
-        end
+        Ldft(Ldft < 0) = 0;
+
+        Ldsph = (1-hse/hreq)*Ldft; % Eq (A.2.5)
     end
 end
 
