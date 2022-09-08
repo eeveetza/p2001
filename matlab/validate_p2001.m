@@ -196,23 +196,26 @@ for iname = 1 : length(filenames)
 
     end
     
-    maxi = max(delta);
-    kk = find(maxi > tol);
+    kk = find(abs(delta) > tol);
     if ~isempty(kk)
         for kki = 1:length(kk)
-            fprintf(1,'Maximum deviation found in step %d larger than tolerance %g:  %g\n', kk(kki), tol, maxi(kk(kki)));
+            fprintf(1,'Maximum deviation found in step %d larger than tolerance %g:  %g\n', kk(kki), tol, delta(kk(kki)));
             failed = true;
         end
     end
     
     if (~failed)
-        fprintf(1,'The deviation from the reference results is smaller than %g dB.\n', tol);
+        success = success + 1;
     end
+
+    total = total + 1;
     %
     
     fclose(fid);
     
     disp(['Results are written in the file: ' filename_out]);
 end
-
-
+fprintf(1,'Validation results: %d out of %d tests passed successfully.\n', success, total);
+if (success == total)
+    fprintf(1,'The deviation from the reference results is smaller than %g dB.\n', tol);
+end

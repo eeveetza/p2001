@@ -178,6 +178,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %     v5    13JUL21     Ivica Stevanovic, OFCOM         Changes in free-space loss according to ITU-R P.2001-4
 %                                                       Renaming subfolder "src" into "private" which is automatically in the MATLAB search path
 %                                                       (as suggested by K. Konstantinou, Ofcom UK)   
+%     v6    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
 
 
 %%
@@ -311,31 +312,10 @@ Sp = (Hhi - Hlo)/dt;
 %% 3.4 Climatic parameters
 % 3.4.1 Refractivity in the lowest 1 km
 
-%DN_Median = load('DigitalMaps/DN_Median.txt');
-DN_Median = DigitalMaps_DN_Median();
-
-%DN_SupSlope = load('DigitalMaps/DN_SupSlope.txt');
-DN_SupSlope = DigitalMaps_DN_SupSlope();
-
-%DN_SubSlope = load('DigitalMaps/DN_SubSlope.txt');
-DN_SubSlope = DigitalMaps_DN_SubSlope();
-
-latcnt = 90:-1.5:-90;               %Table 2.4.1
-loncnt = 0:1.5:360;                 %Table 2.4.1
-
-[LON,LAT] = meshgrid(loncnt, latcnt);
-
-% Map Phime (-180, 180) to loncnt (0,360);
-
-Phime1 = Phime;
-if Phime < 0
-    Phime1 = Phime + 360;
-end
-
 % Find SdN from file DN_Median.txt for the path mid-pint at Phime (lon),
 % Phimn (lat) - as a bilinear interpolation
 
-SdN = interp2(LON,LAT,DN_Median,Phime1,Phimn);
+SdN = get_interp2('DN_Median',Phime,Phimn);
 
 % Obtain Nd1km50 as in (3.4.1.1)
 
@@ -343,11 +323,11 @@ Nd1km50 = -SdN;
 
 % Find SdNsup from DN_SupSlope for the mid-point of the path
 
-SdNsup = interp2(LON,LAT,DN_SupSlope,Phime1,Phimn);
+SdNsup = get_interp2('DN_SupSlope',Phime,Phimn);
 
 % Find SdNsub from DN_SubSlope for the mid-point of the path
 
-SdNsub = interp2(LON,LAT,DN_SubSlope,Phime1,Phimn);
+SdNsub = get_interp2('DN_SubSlope',Phime,Phimn);
 
 % Obtain Nd1kmp as in (3.4.1.2)
 
@@ -357,17 +337,10 @@ else
     Nd1kmp = Nd1km50 - SdNsub*log10(0.02*Tpcq);
 end
 
-clear DN_Median DN_SupSlope DN_SubSlope
-
 % 3.4.2 Refractivity in the lowest 65 m
 % Obtain Nd65m1 from file dndz_01.txt for the midpoint of the path
 
-%dndz_01 = load('DigitalMaps/dndz_01.txt');
-dndz_01 = DigitalMaps_dndz_01();
-
-Nd65m1 = interp2(LON,LAT,dndz_01,Phime1,Phimn);
-
-clear dndz_01
+Nd65m1 = get_interp2('dndz_01',Phime,Phimn);
 
 %% 3.5 Effective Earth-radius geometry
 % Median effective Earth radius (3.5.1)

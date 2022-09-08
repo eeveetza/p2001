@@ -1,6 +1,5 @@
 # MATLAB/Octave Implementation of Recommendation ITU-R P.2001
 
-[![DOI](https://zenodo.org/badge/459560677.svg)](https://zenodo.org/badge/latestdoi/459560677)
 
 This code repository contains a MATLAB/Octave software implementation of [Recommendation ITU-R P.2001-4](https://www.itu.int/rec/R-REC-P.2001/en) with a general purpose wide-range terrestrial propagation model in the frequency range 30 MHz to 50 GHz.  
 

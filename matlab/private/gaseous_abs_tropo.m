@@ -40,27 +40,14 @@ function [Aos, Aws, Awrs, Aotcv, Awtcv, Awrtcv, Aorcv, Awrcv, Awrrcv, Wvsurtx, W
 %     -------------------------------------------------------------------------------
 %     v0    18JUL16     Ivica Stevanovic, OFCOM         Initial version
 %     v1    13JUN17     Ivica Stevanovic, OFCOM         replaced load function calls to increase computational speed
+%     v2    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
 
 % Obtain surface water-vapour density under non-rain conditions at the
 % location of Tx from the data file surfwv_50_fixed.txt
 
-%surfwv_50_fixed = load('DigitalMaps/surfwv_50_fixed.txt');
-surfwv_50_fixed = DigitalMaps_surfwv_50_fixed();
-
-latcnt = 90:-1.5:-90;               %Table 2.4.1
-loncnt = 0:1.5:360;                 %Table 2.4.1
-
-[LON,LAT] = meshgrid(loncnt, latcnt);
-
-% Map phi_te (-180, 180) to loncnt (0,360);
-
-if phi_te < 0
-    phi_te = phi_te + 360;
-end
-
 % Find rho_sur from file surfwv_50_fixed.txt as a bilinear interpolation
 
-rho_sur = interp2(LON,LAT,surfwv_50_fixed,phi_te,phi_tn);
+rho_sur = get_interp2('surfwv',phi_te,phi_tn);
 
 Wvsurtx = rho_sur;
 
@@ -77,15 +64,9 @@ dcv = dtcv;
 % Obtain surface water-vapour density under non-rain conditions at the
 % location of Rx from the data file surfwv_50_fixed.txt
 
-% Map phi_re (-180, 180) to loncnt (0,360);
-
-if phi_re < 0
-    phi_re = phi_re + 360;
-end
-
 % Find rho_sur from file surfwv_50_fixed.txt as a bilinear interpolation
 
-rho_sur = interp2(LON,LAT,surfwv_50_fixed,phi_re,phi_rn);
+rho_sur = get_interp2('surfwv',phi_re,phi_rn);
 
 Wvsurrx = rho_sur;
 
