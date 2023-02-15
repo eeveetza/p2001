@@ -1,4 +1,4 @@
-function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Htg, Grx, Gtx, FlagVP) 
+function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Htg, Grx, Gtx, FlagVP, pdr) 
 %tl_p2001 WRPM in the frequency range 30 MHz to 50 GHz ITU-R P.2001-4
 %   This function computes path loss due to both signal enhancements and fading 
 %   over the range from 0% to 100% of an average year according to the
@@ -31,6 +31,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 % Grx         dBi   float   T.2.2.1     Receiving antenna gain in the direction of the ray to the transmitting antenna
 % Gtx         dBi   float   T.2.2.1     Transmitting antenna gain in the direction of the ray to the receiving antenna
 % FlagVp            bool    T.2.2.1     Polarisation: 1 = vertical; 0 = horizontal
+% pdr         -     bool    1           = pdr activated
 % 
 % Outputs: 
 %
@@ -468,12 +469,21 @@ Lbm2 = Lba + Agsur;
 
 % Use the method given in Attachment E to calculate the troposcatter basic
 % transmission loss Lbs as given by equation (E.17)
-
-[Lbs, Thetas, Ztropo] = tl_troposcatter(GHz, dt, Thetat, Thetar, Thetae, Phicvn, Phicve, Phitn, Phite, Phirn, Phire, Gtx, Grx, Reff50, Tpcp);
-
-% To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
-
-Lbs = max(Lbs, Lbfs);
+if (~pdr)
+    [Lbs, Thetas, Ztropo] = tl_troposcatter(GHz, dt, Thetat, Thetar, Thetae, Phicvn, Phicve, Phitn, Phite, Phirn, Phire, Gtx, Grx, Reff50, Tpcp);
+    
+    % To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
+    Lbs = max(Lbs, Lbfs);
+else
+    
+    % height of the Earth's sufrace above sea level where the dcommon
+    % volume is located
+    Hs = Hcv/1000.0; % in km
+    Ht = (Htg + h(1))/1000; % in km
+    Hr = (Hrg + h(end))/1000; % in km
+    [Lbs, Thetas] = tl_troposcatter_pdr(GHz, dt, Ht, Hr, Thetat, Thetar, Phicvn, Phicve, Gtx, Grx, Tpcp, Hs);
+    
+end
 
 % Perform the preliminary rain/wet-snow calculations in Attachment C.2 from
 % the transmitter to common-volume path segment with the following inputs (4.3.1)
@@ -672,7 +682,11 @@ p2001.Wave      =    Wave;
 p2001.Wvsurmid  =    Wvsurmid;
 p2001.Wvsurrx   =    Wvsurrx;
 p2001.Wvsurtx   =    Wvsurtx;
-p2001.Ztropo    =    Ztropo;
+if (~pdr)
+    p2001.Ztropo	=	Ztropo;
+else
+    p2001.Ztropo = 1;
+end
 
 
 return
