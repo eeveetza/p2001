@@ -30,6 +30,8 @@ tol = 1e-6;
 success = 0;
 total = 0;
 
+pdr = 0;
+
 %% compute the path profile parameters
 s = pwd;
 
@@ -156,7 +158,7 @@ for iname = 1 : length(filenames)
         end
         
         p2001 = tl_p2001(d, h, z, GHz(i), Tpc(i), Phire(i), Phirn(i), Phite(i), Phitn(i), ...
-            Hrg(i), Htg(i), Grx(i), Gtx(i), FlagVP(i));
+            Hrg(i), Htg(i), Grx(i), Gtx(i), FlagVP(i), pdr);
         
         
         row = [...
