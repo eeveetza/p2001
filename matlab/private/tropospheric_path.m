@@ -36,7 +36,7 @@ function [d_tcv, d_rcv, phi_cve, phi_cvn, h_cv, phi_tcve, phi_tcvn, phi_rcve, ph
 % -------------------------------------------------------------------------------
 % v0    13JUL16     Ivica Stevanovic, OFCOM         Initial version 
 
-% Horizontal path lenght from transmitter to common volumne (3.9.1a)
+% Horizontal path length from transmitter to common volume (3.9.1a)
 
 d_tcv = ( dt * tan(0.001*theta_rpos + 0.5* theta_e) - 0.001*(hts-hrs) ) / ...
         ( tan(0.001*theta_tpos + 0.5*theta_e) + tan(0.001*theta_rpos + 0.5* theta_e));
@@ -54,7 +54,7 @@ end
 
 d_rcv = dt - d_tcv;
 
-% Calculate the longitude and latitude of the common volumne from the
+% Calculate the longitude and latitude of the common volume from the
 % transmitter and receiver longitudes and latitudes using the great circle
 % path method of Attachment H by seting d_pnt = d_tcv
 
