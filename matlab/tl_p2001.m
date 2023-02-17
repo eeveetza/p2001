@@ -470,19 +470,20 @@ Lbm2 = Lba + Agsur;
 % Use the method given in Attachment E to calculate the troposcatter basic
 % transmission loss Lbs as given by equation (E.17)
 if (~pdr)
-    [Lbs, Thetas, Ztropo] = tl_troposcatter(GHz, dt, Thetat, Thetar, Thetae, Phicvn, Phicve, Phitn, Phite, Phirn, Phire, Gtx, Grx, Reff50, Tpcp);
+    [Lbs, Thetas, Ztropo] = tl_troposcatter(GHz, dt, Thetat, Thetar, Thetae, Phicvn, Phicve, Phitn, Phite, Phirn, Phire, ...
+                                            Gtx, Grx, Reff50, Tpcp);
     
     % To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
     Lbs = max(Lbs, Lbfs);
-else
-    
-    % height of the Earth's sufrace above sea level where the dcommon
+else   
+    % height of the Earth's surface above sea level where the common
     % volume is located
-    Hs = Hcv/1000.0; % in km
+    Hs = surface_altitude_cv(h, d, Dtcv)/1000.0; % in km
     Ht = (Htg + h(1))/1000; % in km
     Hr = (Hrg + h(end))/1000; % in km
     [Lbs, Thetas] = tl_troposcatter_pdr(GHz, dt, Ht, Hr, Thetat, Thetar, Phicvn, Phicve, Gtx, Grx, Tpcp, Hs);
-    
+    % To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
+   
 end
 
 % Perform the preliminary rain/wet-snow calculations in Attachment C.2 from
