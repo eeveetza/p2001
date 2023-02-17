@@ -36,8 +36,11 @@ h1 = h(i1);
 h2 = h(i2);
 ds = d_tcv;
 
-hs = h1 + (h2-h1)*(ds-d1)/(d2-d1);
-
+if (d1 == d2)
+    hs = h1;
+else
+    hs = h1 + (h2-h1)*(ds-d1)/(d2-d1);
+end
 
 return
 end
