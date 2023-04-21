@@ -44,30 +44,13 @@ fMHz = f*1000;  % from GHz in MHz
 
 %% E.2 Climatic classification
 
-DN50 = DigitalMaps_DN50();
-
-N050 = DigitalMaps_N050();
-
-latcnt = 90:-1.5:-90;               %Table 2.4.1
-loncnt = 0:1.5:360;                 %Table 2.4.1  
-[LON,LAT] = meshgrid(loncnt, latcnt);
-
-% Map phicve (-180, 180) to loncnt (0,360);
-
-phicve1 = phicve;
-if phicve1 < 0
-    phicve1 = phicve + 360;
-end
-
 % Find average annual sea-level surface refractivity N0 and radio-refractivity lapse rate dN 
 % for the common volume of the link in question using the digital maps at phicve (lon),
 % phicvn (lat) - as a bilinear interpolation
 
-dN = interp2(LON,LAT,DN50,phicve1,phicvn);
+dN = get_interp2('DN50',phicve,phicvn);
 
-N0 = interp2(LON,LAT,N050,phicve1,phicvn);
-
-clear DN50 N050
+N0 = get_interp2('N050',phicve,phicvn);
 
 
 %% E.3 Calculation of tropocscatter basic transmission loss
