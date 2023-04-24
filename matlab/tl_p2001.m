@@ -180,6 +180,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %                                                       Renaming subfolder "src" into "private" which is automatically in the MATLAB search path
 %                                                       (as suggested by K. Konstantinou, Ofcom UK)   
 %     v6    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
+%     v7    24APR23     Ivica Stevanovic, OFCOM         introduced pdr troposcatter
 
 %%
 
@@ -451,11 +452,8 @@ else
     % height of the Earth's surface above sea level where the common
     % volume is located
     Hs = surface_altitude_cv(h, d, Dtcv)/1000.0; % in km
-    Ht = (Htg + h(1))/1000; % in km
-    Hr = (Hrg + h(end))/1000; % in km
-    [Lbs, Thetas] = tl_troposcatter_pdr(GHz, dt, Ht, Hr, Thetat, Thetar, Phicvn, Phicve, Gtx, Grx, Tpcp, Hs);
-    % To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
-   
+    [Lbs, Thetas] = tl_troposcatter_pdr(GHz, dt, Hts, Hrs, Reff50, Thetae, Thetat, Thetar, Phicvn, Phicve, Gtx, Grx, Tpcp, Hs);
+       
 end
 
 % Perform the preliminary rain/wet-snow calculations in Attachment C.2 from
