@@ -1,4 +1,4 @@
-function [Lbs, theta] = tl_troposcatter_pdr(f, dt, ht, hr, thetat, thetar, phicvn, phicve,  Gt, Gr, p, hs)
+function [Lbs, theta] = tl_troposcatter_pdr(f, dt, hts, hrs, ae, the, thetat, thetar, phicvn, phicve,  Gt, Gr, p, hs)
 %tl_troposcatter_pdr Troposcatter basic transmission loss
 %   This function computes the troposcatter basic transmission loss
 %   as defined in WP 3M Chairman's Report 3M/364 Annex 2 
@@ -6,7 +6,9 @@ function [Lbs, theta] = tl_troposcatter_pdr(f, dt, ht, hr, thetat, thetar, phicv
 %     Input parameters:
 %     f       -   Frequency GHz
 %     dt      -   Total distance (km)
-%     ht, hr  -   Altitudes of transmitting antenna and receiving antennas in km  
+%     hts, hrs  -   Altitudes of transmitting antenna and receiving antennas in m  
+%     ae      -   Effective Earth radius (km)
+%     the     -   Angle subtended by d km at centre of spherical Earth (rad)
 %     thetat  -   Tx horizon elevation angle relative to the local horizontal (mrad)
 %     thetar  -   Rx horizon elevation angle relative to the local horizontal (mrad)
 %     phicvn  -   Troposcatter common volume latitude (deg)
@@ -25,7 +27,7 @@ function [Lbs, theta] = tl_troposcatter_pdr(f, dt, ht, hr, thetat, thetar, phicv
 %     theta  -   Scatter angle (mrad)
 %
 %     Example:
-%     [Lbs, theta] = tl_troposcatter_Annex8(f, dt, ht, hr, thetat, thetar, phicvn, phicve,  Gt, Gr, p, hs)
+%     [Lbs, theta] = tl_troposcatter_pdr(f, dt, hts, hrs, ae, the, thetat, thetar, phicvn, phicve,  Gt, Gr, p, hs)
 
 %
 %     Rev   Date        Author                          Description
@@ -36,7 +38,7 @@ function [Lbs, theta] = tl_troposcatter_pdr(f, dt, ht, hr, thetat, thetar, phicv
 %                                                       when the point is equally spaced from the two closest grid points
 %     v3    28OCT19     Ivica Stevanovic, OFCOM         Introduced proposal from China as given in Annex 8 of the Chairmans Report 3M/343-E from Montreal meeting 2018
 %     v4    15FEB23     Ivica Stevanovic, OFCOM         Introduced the updates from PDR (see WP 3M Chairman's report 2022 3M/364 Annex 2 )
-
+%     v5    24APR23     Ivica Stevanovic, OFCOM         Introduced minor changes to align the variables with the rest of Recommendation (see SUI input to WP 3M 2022) 
 
 % Attachment E: Troposcatter
 
@@ -56,11 +58,8 @@ N0 = get_interp2('N050',phicve,phicvn);
 %% E.3 Calculation of tropocscatter basic transmission loss
 
 % Step2: Calculate the scatter angle theta 
-k = 4.0/3.0;
-a = 6371;
-the = dt * 1000 /(k * a);   % mrad   (E.2)
 
-theta = the + thetat + thetar; % mrad    (E.1)
+theta = 1000*the + thetat + thetar; % mrad    (E.1)
 
 % Step 3: Estimate the aperture-to-median coupling loss Lc (11)
 
@@ -71,9 +70,10 @@ Lc = 0.07 * exp(0.055* (Gt + Gr));   % dB    (E.3)
 
 hb = 7.35;  %km  scale height set to the global mean
 
-beta = dt/(2*k*a) + thetar/1000 + (hr-ht)/dt;  %(E.8)
+beta = dt/(2*ae) + thetar/1000 + (hrs-hts)/(1000*dt);  %(E.7)
 
-h0 = ht + dt*sin(beta)/(sin(theta/1000)) *(0.5* dt * sin(beta)/(k*a*sin(theta/1000))+sin(thetat/1000));   %(E.7)
+%h0 = ht + dt*sin(beta)/(sin(theta/1000)) *(0.5* dt * sin(beta)/(k*a*sin(theta/1000))+sin(thetat/1000));   %(E.7)
+h0 = hts/1000 + dt*sin(beta)/(sin(theta/1000)) *(0.5* dt * sin(beta)/(ae*sin(theta/1000))+sin(thetat/1000));   %(E.6)
 
 Yp = 0.035*N0*exp(-h0/hb)*(-log10(p/50)).^(0.67);
 
@@ -83,7 +83,7 @@ if (p >= 50)
     
 end
 
-F = 0.18*N0*exp(-hs/hb) - 0.23*dN;   %(E.5)
+F = 0.18*N0*exp(-hs/hb) - 0.23*dN;   %(E.4)
 
 Lbs = F + 22.0*log10(fMHz) + 35.0*log10(theta) + 17.0*log10(dt) + Lc - Yp;    % (E.4)
 

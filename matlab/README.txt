@@ -1,4 +1,4 @@
-P2001 Version 4.1-tropo (21.05.23)
+P2001 Version 4.1-tropo (24.04.23)
 
 MATLAB implementation of Recommendation ITU-R P.2001-4
 
@@ -23,7 +23,7 @@ Files and subfolders in the distribution .zip package.
 
 UPDATES AND FIXES
 -----------------
-Version 4.1-troposcatter
+Version 4.1-troposcatter (24.04.23)
         - test version introducing troposcatter prediction method
 
 Version 4.1 (21.05.23)
