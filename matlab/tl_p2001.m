@@ -453,7 +453,8 @@ else
     % volume is located
     Hs = surface_altitude_cv(h, d, Dtcv)/1000.0; % in km
     [Lbs, Thetas] = tl_troposcatter_pdr(GHz, dt, Hts, Hrs, Reff50, Thetae, Thetat, Thetar, Phicvn, Phicve, Gtx, Grx, Tpcp, Hs);
-       
+    % To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
+    Lbs = max(Lbs, Lbfs);   
 end
 
 % Perform the preliminary rain/wet-snow calculations in Attachment C.2 from

@@ -1,4 +1,4 @@
-function [Lbs, theta] = tl_troposcatter_pdr(f, dt, hts, hrs, ae, the, thetat, thetar, phicvn, phicve,  Gt, Gr, p, hs)
+function [Lbs, theta] = tl_troposcatter_pdr(f, dt, hts, hrs, ae, the, thetat, thetar, phicvn, phicve, Gt, Gr, p, hs)
 %tl_troposcatter_pdr Troposcatter basic transmission loss
 %   This function computes the troposcatter basic transmission loss
 %   as defined in WP 3M Chairman's Report 3M/364 Annex 2 
