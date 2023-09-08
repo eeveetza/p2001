@@ -60,6 +60,7 @@ N0 = get_interp2('N050',phicve,phicvn);
 % Step2: Calculate the scatter angle theta 
 
 theta = 1000*the + thetat + thetar; % mrad    (E.1)
+theta = max(1e-6, theta);
 
 % Step 3: Estimate the aperture-to-median coupling loss Lc (11)
 
