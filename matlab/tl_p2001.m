@@ -233,7 +233,7 @@ end
 dt = d(end);                        % Eq (3.2.1)
 
 % make sure that there is enough points in the path profile 
-if (length(d) <= 10)
+if (length(d) <= 5)
     error('The number of points in path profile should be larger than 10');
 end
 
