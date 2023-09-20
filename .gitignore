@@ -33,3 +33,4 @@
 
 .DS_Store
 matlab/private/surface_altitude_cv.asv
+*.asv
