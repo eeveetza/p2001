@@ -52,7 +52,7 @@ fMHz = f*1000;  % from GHz in MHz
 
 dN = get_interp2('DN50',phicve,phicvn);
 
-N0 = get_interp2('N050',phicve,phicvn)
+N0 = get_interp2('N050',phicve,phicvn);
 
 
 %% E.3 Calculation of tropocscatter basic transmission loss
