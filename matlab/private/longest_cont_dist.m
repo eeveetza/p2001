@@ -25,6 +25,7 @@ function   dm = longest_cont_dist(d, zone, zone_r)
 %                                                       before: 2 - Inland, 1 - Coastal land, 3 - Sea
 %                                                       now:    4 - Inland, 3 - Coastal land, 1 - Sea
 %     v3    18JUL16     Ivica Stevanovic, OFCOM         modified condition d(stop(i)<d(end)) --> stop(i) < nmax 
+%     v4    10NOV22     Ivica Stevanovic, OFCOM         Corrected a bug in start(i)>1
 
 dm = 0;
 
@@ -45,7 +46,7 @@ for i = 1:n
     end
     
     if ( start(i) > 1)
-        delta = delta + ( d(stop(i))-d(stop(i)-1) )/2.0;
+        delta = delta + ( d(start(i))-d(start(i)-1) )/2.0;
     end
     
    dm = max(d(stop(i))-d(start(i)) + delta, dm);
