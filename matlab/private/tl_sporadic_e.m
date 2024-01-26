@@ -42,7 +42,7 @@ function [Lbe, Lbes1, Lbes2, Lp1t, Lp2t, Lp1r, Lp2r, Gamma1, Gamma2, FoEs1hop, F
 %     -------------------------------------------------------------------------------
 %     v0    18JUL16     Ivica Stevanovic, OFCOM         Initial version
 %     v1    13JUN17     Ivica Stevanovic, OFCOM         replaced load function calls to increase computational speed
-
+%     v2    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
 
 
 % Attachment G: Sporadic-E propagation
@@ -51,48 +51,31 @@ function [Lbe, Lbes1, Lbes2, Lp1t, Lp2t, Lp1r, Lp2r, Gamma1, Gamma2, FoEs1hop, F
 
 if p<1
     p1 = 0.1; 
-    %foes1tab = load('DigitalMaps/FoEs0.1.txt');
-    foes1tab = DigitalMaps_FoEs0p1();
     p2 = 1;
-    %foes2tab = load('DigitalMaps/FoEs01.txt');
-    foes2tab = DigitalMaps_FoEs01();
 elseif (p > 10)
     p1 = 10; 
-    %foes1tab = load('DigitalMaps/FoEs10.txt');
-    foes1tab = DigitalMaps_FoEs10();
     p2 = 50;
-    %foes2tab = load('DigitalMaps/FoEs50.txt');
-    foes2tab = DigitalMaps_FoEs50();
 else
     p1 = 1;
-    %foes1tab = load('DigitalMaps/FoEs01.txt');
-    foes1tab = DigitalMaps_FoEs01();
     p2 = 10;
-    %foes2tab = load('DigitalMaps/FoEs10.txt');
-    foes2tab = DigitalMaps_FoEs10();
 end
 
 
 %% G.2 1-hop propagation
 
 % foes for the mid-point of the path
-
-latcnt = 90:-1.5:-90;               %Table 2.4.1
-loncnt = 0:1.5:360;                 %Table 2.4.1
-
-[LON,LAT] = meshgrid(loncnt, latcnt);
-
-% Map phime (-180, 180) to loncnt (0,360);
-
-if phime < 0
-    phime = phime + 360;
-end
-
 % Find foes1/2 from the correspoinding files for the path mid-point - as a bilinear interpolation
 
-foes1 = interp2(LON,LAT,foes1tab,phime,phimn);
-foes2 = interp2(LON,LAT,foes2tab,phime,phimn);
-
+if p1 ==  0.1
+    foes1 = get_interp2('FoEs0p1',phime,phimn);
+    foes2 = get_interp2('FoEs01',phime,phimn);
+elseif (p1 == 1)
+    foes1 = get_interp2('FoEs01',phime,phimn);
+    foes2 = get_interp2('FoEs10',phime,phimn);
+else
+    foes1 = get_interp2('FoEs10',phime,phimn);
+    foes2 = get_interp2('FoEs50',phime,phimn);
+end
 
 FoEs1hop = foes1 + (foes2-foes1) * (log10(p/p1))/(log10(p2/p1));          % Eq (G.1.1)
 
@@ -174,14 +157,16 @@ d3q = 0.75*dt;
 phie = Phi1qe;
 phin = Phi1qn;
 
-if phie < 0
-    phie = phie + 360;
+if p1 ==  0.1
+    foes1 = get_interp2('FoEs0p1',phie,phin);
+    foes2 = get_interp2('FoEs01',phie,phin);
+elseif (p1 == 1)
+    foes1 = get_interp2('FoEs01',phie,phin);
+    foes2 = get_interp2('FoEs10',phie,phin);
+else
+    foes1 = get_interp2('FoEs10',phie,phin);
+    foes2 = get_interp2('FoEs50',phie,phin);
 end
-
-% Find foes1/2 from the correspoinding files for the one-quorter-point - as a bilinear interpolation
-
-foes1 = interp2(LON,LAT,foes1tab,phie,phin);
-foes2 = interp2(LON,LAT,foes2tab,phie,phin);
 
 FoEs2hop1q = foes1 + (foes2-foes1) * (log10(p/p1))/(log10(p2/p1));          % Eq (G.1.1)
 
@@ -191,16 +176,17 @@ FoEs2hop1q = foes1 + (foes2-foes1) * (log10(p/p1))/(log10(p2/p1));          % Eq
 phie = Phi3qe;
 phin = Phi3qn;
 
-if phie < 0
-    phie = phie + 360;
+if p1 ==  0.1
+    foes1 = get_interp2('FoEs0p1',phie,phin);
+    foes2 = get_interp2('FoEs01',phie,phin);
+elseif (p1 == 1)
+    foes1 = get_interp2('FoEs01',phie,phin);
+    foes2 = get_interp2('FoEs10',phie,phin);
+else
+    foes1 = get_interp2('FoEs10',phie,phin);
+    foes2 = get_interp2('FoEs50',phie,phin);
 end
 
-% Find foes1/2 from the correspoinding files for the one-quorter-point - as a bilinear interpolation
-
-foes1 = interp2(LON,LAT,foes1tab,phie,phin);
-foes2 = interp2(LON,LAT,foes2tab,phie,phin);
-
-clear foes1tab foes2tab
 
 FoEs2hop3q = foes1 + (foes2-foes1) * (log10(p/p1))/(log10(p2/p1));          % Eq (G.1.1)
 

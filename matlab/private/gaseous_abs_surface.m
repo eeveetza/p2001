@@ -29,29 +29,15 @@ function [Aosur, Awsur, Awrsur, gamma_o, gamma_w, gamma_wr, rho_sur] = gaseous_a
 %     -------------------------------------------------------------------------------
 %     v0    13JUL16     Ivica Stevanovic, OFCOM         Initial version
 %     v1    13JUN17     Ivica Stevanovic, OFCOM         replaced load function calls to increase computational speed
+%     v2    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
 
 % Obtain surface water-vapour density under non-rain conditions at the
 % midpoint of the path from the data file surfwv_50_fixed.txt
 
-%surfwv_50_fixed = load('DigitalMaps/surfwv_50_fixed.txt');
-surfwv_50_fixed = DigitalMaps_surfwv_50_fixed();
-
-latcnt = 90:-1.5:-90;               %Table 2.4.1
-loncnt = 0:1.5:360;                 %Table 2.4.1
-
-[LON,LAT] = meshgrid(loncnt, latcnt);
-
-% Map Phime (-180, 180) to loncnt (0,360);
-
-phi_me1 = phi_me;
-if phi_me < 0
-    phi_me1 = phi_me + 360;
-end
-
-% Find rho_sur from file surfwv_50_fixed.txt for the path mid-pint at phi_me1 (lon),
+% Find rho_sur from file surfwv_50_fixed.txt for the path mid-pint at phi_me (lon),
 % phi_mn (lat) - as a bilinear interpolation
 
-rho_sur = interp2(LON,LAT,surfwv_50_fixed,phi_me1,phi_mn);
+rho_sur = get_interp2('surfwv',phi_me,phi_mn);
 
 h_sur = h_mid;
 

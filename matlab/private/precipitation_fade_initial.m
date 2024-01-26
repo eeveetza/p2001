@@ -34,64 +34,29 @@ function [a, b, c, dr, Q0ra, Fwvr, kmod, alpha_mod, G, P, flagrain] = precipitat
 %     v0    15JUL16     Ivica Stevanovic, OFCOM         Initial version
 %     v1    13JUN17     Ivica Stevanovic, OFCOM         replaced load calls to increase computational speed
 %     v2    07MAR18     Ivica Stevanovic, OFCOM         declared empty arrays G and P for no-rain path
+%     v3    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
 
 %% C.2 Precipitation fading: Preliminary calculations
-
-latcnt = 90:-1.125:-90;               %Table 2.4.1
-loncnt = 0:1.125:360;                 %Table 2.4.1
-
-[LON,LAT] = meshgrid(loncnt, latcnt);
-
-% Map Phime (-180, 180) to loncnt (0,360);
-
-if phi_e < 0
-    phi_e = phi_e + 360;
-end
 
 % Obtain Pr6 for phi_n, phi_e from the data file "Esarain_Pr6_v5.txt"
 % as a bilinear interpolation
 
-%Esarain_Pr6 = load('DigitalMaps/Esarain_Pr6_v5.txt');
-Esarain_Pr6 = DigitalMaps_Esarain_Pr6_v5();
-
-Pr6 = interp2(LON,LAT,Esarain_Pr6,phi_e,phi_n);
-
-clear Esarain_Pr6
+Pr6 = get_interp2('Esarain_Pr6',phi_e,phi_n);
 
 % Obtain Mt for phi_n, phi_e from the data file "Esarain_Mt_v5.txt"
 % as a bilinear interpolation
 
-%Esarain_Mt = load('DigitalMaps/Esarain_Mt_v5.txt');
-Esarain_Mt = DigitalMaps_Esarain_Mt_v5();
-
-Mt = interp2(LON,LAT,Esarain_Mt,phi_e,phi_n);
-
-clear Esarain_Mt
+Mt = get_interp2('Esarain_Mt',phi_e,phi_n);
 
 % Obtain beta_rain for phi_n, phi_e from the data file "Esarain_Beta_v5.txt"
 % as a bilinear interpolation
 
-%Esarain_Beta = load('DigitalMaps/Esarain_Beta_v5.txt');
-Esarain_Beta = DigitalMaps_Esarain_Beta_v5();
-
-beta_rain = interp2(LON,LAT,Esarain_Beta,phi_e,phi_n);
-
-clear Esarain_Beta
+beta_rain = get_interp2('Esarain_Beta',phi_e,phi_n);
 
 % Obtain h0 for phi_n, phi_e from the data file "h0.txt"
 % as a bilinear interpolation
 
-latcnt = 90:-1.5:-90;               %Table 2.4.1
-loncnt = 0:1.5:360;                 %Table 2.4.1
-
-[LON,LAT] = meshgrid(loncnt, latcnt);
-
-%data_h0 = load('DigitalMaps/h0.txt');
-data_h0 = DigitalMaps_h0();
-
-h0 = interp2(LON,LAT,data_h0,phi_e,phi_n);
-
-clear data_h0
+h0 = get_interp2('h0',phi_e,phi_n);
 
 % Calculate mean rain height hr (C.2.1)
 

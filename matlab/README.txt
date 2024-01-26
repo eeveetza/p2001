@@ -1,4 +1,4 @@
-P2001 Version 4.0 (22.05.22)
+P2001 Version 4.1 (21.04.23)
 
 MATLAB implementation of Recommendation ITU-R P.2001-4
 
@@ -23,6 +23,14 @@ Files and subfolders in the distribution .zip package.
 
 UPDATES AND FIXES
 -----------------
+Version 4.1 (21.04.23)
+        - Introduced a new routine get_interp2 instead of interp2 for interpolation from radiometeorological maps,
+          which results in a ~7x increase in computational speed (MATLAB). 
+          Validation files are updated with minor numerical changes (<1e-12 dB)
+        - Corrected an indexing issue in path_fraction.m and longest_cont_dist.m 
+        - Corrected an issue in dl_se.m to cap to zero only the polarization component that is negative 
+        - Corrected an issue in validate_p2001.m when reporting the differences larger than the tolerance
+
 Version 4 (22.05.22)
         - Modifications in free space loss according to ITU-R P.2001-4
 	- Corrected Rx Lon/Lat in the profile b2iseac
