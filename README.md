@@ -11,11 +11,45 @@ The following table describes the structure of the folder `./matlab/` containing
 
 | File/Folder               | Description                                                         |
 |----------------------------|---------------------------------------------------------------------|
-|`tl_p2001.m`                | MATLAB function implementing Recommendation ITU-R P.2001-4         |           
+|`tl_p2001.m`                | MATLAB function implementing Recommendation ITU-R P.2001-4         |      
+|`initiate_digital_maps.m`| MATLAB script that processes the ITU-R maps and generates the necessary functions. It needs to be run prior to using this software implementation. For details, see [Integrating ITU Digital Products](#integrating-itu-digital-products). |     
 |`validate_p2001.m`                  | MATLAB scripts used to validate this implementation using a set of test terrain profiles provided in `./validation_examples/` |   
 |`./validation_examples/`    | Folder containing validation examples for Recommendation ITU-R P.2001-4 |
 |`./validation_results/`	   | Folder containing the results of the validation tests using `tl_p2001.m` on the terrain profiles that corespond to the profiles defined in `./validation_examples/` |
 |`./private/`   |             Folder containing the functions called by `tl_2001.m` and `validate_p2001*.m`|
+
+
+## Integrating ITU Digital Products
+
+This software uses ITU digital products that are integral part of Recommendations. These products must not be reproduced or distributed without explicit written permission from the ITU.
+
+### Setup Instructions
+
+1. **Download and extract the required maps** to `./private/maps`:
+
+   - From [ITU-R P.2001-4](https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-4-202109-S!!ZIP-E.zip):
+     - `DN_Median.txt`
+     - `DN_SubSlope.txt`
+     - `DN_SupSlope.txt`	
+     - `dndz_01.txt`
+     - `Esarain_Mt_v5.txt`
+     - `Esarain_Pr6_v5.txt`
+     - `Esarain_Beta_v5.txt`	
+     - `FoEs0.1.txt`	
+     - `FoEs01.txt`
+     - `FoEs10.txt`
+     - `FoEs50.txt`
+     - `h0.txt`
+     - `surfwv_50_fixed.txt`
+     - `TropoClim.txt`
+
+2. **Run the script** `initiate_digital_maps.m` 
+
+### Notes
+
+- Ensure all files are placed in `./private/maps` before running the script.
+- The script processes the maps, which are critical for the software’s functionality.
+- The resulting `*.m` files to for retrieving and interpolating data from from the maps.are placed in the folder `./private`.
 
 ## Function Call
 

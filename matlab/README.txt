@@ -1,4 +1,4 @@
-P2001 Version 4.1 (21.04.23)
+P2001 Version 4.1.1 (13.09.24)
 
 MATLAB implementation of Recommendation ITU-R P.2001-4
 
@@ -7,22 +7,35 @@ GENERAL NOTES
 
 Files and subfolders in the distribution .zip package.
 
- tl_p2001.m             - MATLAB function implementing Recommendation ITU-R P.2001-4
+tl_p2001.m              - MATLAB function implementing Recommendation ITU-R P.2001-4
   
- ./private/             - Folder containing the functions used by tl_p2001.m and validate_p2001*.m
+initiate_digital_maps.m - MATLAB script that processes the ITU-R maps and generates the necessary functions. 
+                          a) Download and extract the required maps to `./private/maps` 
+                             From https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.452-18-202310-I!!ZIP-E.zip:
+                                DN_Median.txt		Esarain_Mt_v5.txt	FoEs10.txt		h0.txt
+                                DN_SubSlope.txt		Esarain_Pr6_v5.txt	FoEs50.txt		surfwv_50_fixed.txt
+                                DN_SupSlope.txt		FoEs0.1.txt		TropoClim.txt
+                                Esarain_Beta_v5.txt	FoEs01.txt		dndz_01.txt
+                          b) Run the script initiate_digital_maps.m. 
+                             The resulting `*.m` files will be placed in the folder `./private`. 
 
- validate_p2001.m       - MATLAB scripts used to validate the implementation of Recommendation ITU-R P.2001-4
+./private/              - Folder containing the functions used by tl_p2001.m and validate_p2001*.m
+ 
+validate_p2001.m        - MATLAB scripts used to validate the implementation of Recommendation ITU-R P.2001-4
                               as defined in the file tl_p2001.m using a set of test terrain profiles provided in
                               the folder ./validation_examples/
 
- ./validation_examples/ - Folder containing validation examples for Recommendation ITU-R P.2001-4
+./validation_examples/  - Folder containing validation examples for Recommendation ITU-R P.2001-4
 
- ./validation_results/  - Folder containing the results of the validation tests using tl_p2001.m on the terrain
+./validation_results/   - Folder containing the results of the validation tests using tl_p2001.m on the terrain
                                 profiles that correspond to the profiles defined in ./validation_examples/
 
 
 UPDATES AND FIXES
 -----------------
+Version 4.1.1 (13.09.24)
+        - Introduced functions and workflow for integrating ITU-R maps
+
 Version 4.1 (21.04.23)
         - Introduced a new routine get_interp2 instead of interp2 for interpolation from radiometeorological maps,
           which results in a ~7x increase in computational speed (MATLAB). 
