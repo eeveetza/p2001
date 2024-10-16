@@ -1,4 +1,4 @@
-P2001 Version 4.1.1 (13.09.24)
+P2001 Version 4.1-tropo (02.10.24)
 
 MATLAB implementation of Recommendation ITU-R P.2001-4
 
@@ -7,7 +7,7 @@ GENERAL NOTES
 
 Files and subfolders in the distribution .zip package.
 
-tl_p2001.m              - MATLAB function implementing Recommendation ITU-R P.2001-4
+ tl_p2001.m             - MATLAB function implementing Recommendation ITU-R P.2001-4
   
 initiate_digital_maps.m - MATLAB script that processes the ITU-R maps and generates the necessary functions. 
                           a) Download and extract the required maps to `./private/maps` 
@@ -19,30 +19,33 @@ initiate_digital_maps.m - MATLAB script that processes the ITU-R maps and genera
                           b) Run the script initiate_digital_maps.m. 
                              The resulting `*.m` files will be placed in the folder `./private`. 
 
-./private/              - Folder containing the functions used by tl_p2001.m and validate_p2001*.m
- 
-validate_p2001.m        - MATLAB scripts used to validate the implementation of Recommendation ITU-R P.2001-4
+ ./private/             - Folder containing the functions used by tl_p2001.m and validate_p2001*.m
+
+ validate_p2001.m       - MATLAB scripts used to validate the implementation of Recommendation ITU-R P.2001-4
                               as defined in the file tl_p2001.m using a set of test terrain profiles provided in
                               the folder ./validation_examples/
 
-./validation_examples/  - Folder containing validation examples for Recommendation ITU-R P.2001-4
+ ./validation_examples/ - Folder containing validation examples for Recommendation ITU-R P.2001-4
 
-./validation_results/   - Folder containing the results of the validation tests using tl_p2001.m on the terrain
+ ./validation_results/  - Folder containing the results of the validation tests using tl_p2001.m on the terrain
                                 profiles that correspond to the profiles defined in ./validation_examples/
 
 
 UPDATES AND FIXES
 -----------------
+Version 4.1.1-troposcatter (02.10.24)
+        - test version introducing troposcatter prediction method from PDR P.617-5
+
 Version 4.1.1 (13.09.24)
         - Introduced functions and workflow for integrating ITU-R maps
 
-Version 4.1 (21.04.23)
-        - Introduced a new routine get_interp2 instead of interp2 for interpolation from radiometeorological maps,
-          which results in a ~7x increase in computational speed (MATLAB). 
+Version 4.1 (21.05.23)
+        - Introduced a new routine get_interp2 instead of interp2 when interpolating from radiometeorological maps,
+          which results in a 7x increase in computational speed (MATLAB). 
           Validation files are updated with minor numerical changes (<1e-12 dB)
         - Corrected an indexing issue in path_fraction.m and longest_cont_dist.m 
         - Corrected an issue in dl_se.m to cap to zero only the polarization component that is negative 
-        - Corrected an issue in validate_p2001.m when reporting the differences larger than the tolerance
+        - Corrected an issue in validate_p2001.m when reporting differences in computed results larger than the tolerance
 
 Version 4 (22.05.22)
         - Modifications in free space loss according to ITU-R P.2001-4

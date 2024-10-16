@@ -1,4 +1,4 @@
-function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Htg, Grx, Gtx, FlagVP) 
+function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Htg, Grx, Gtx, FlagVP, pdr) 
 %tl_p2001 WRPM in the frequency range 30 MHz to 50 GHz ITU-R P.2001-4
 %   This function computes path loss due to both signal enhancements and fading 
 %   over the range from 0% to 100% of an average year according to the
@@ -31,6 +31,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 % Grx         dBi   float   T.2.2.1     Receiving antenna gain in the direction of the ray to the transmitting antenna
 % Gtx         dBi   float   T.2.2.1     Transmitting antenna gain in the direction of the ray to the receiving antenna
 % FlagVp            bool    T.2.2.1     Polarisation: 1 = vertical; 0 = horizontal
+% pdr         -     bool    1           = pdr activated
 % 
 % Outputs: 
 %
@@ -179,7 +180,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %                                                       Renaming subfolder "src" into "private" which is automatically in the MATLAB search path
 %                                                       (as suggested by K. Konstantinou, Ofcom UK)   
 %     v6    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
-
+%     v7    24APR23     Ivica Stevanovic, OFCOM         introduced pdr troposcatter
 
 %%
 
@@ -232,7 +233,7 @@ end
 dt = d(end);                        % Eq (3.2.1)
 
 % make sure that there is enough points in the path profile 
-if (length(d) <= 10)
+if (length(d) <= 5)
     error('The number of points in path profile should be larger than 10');
 end
 
@@ -441,12 +442,20 @@ Lbm2 = Lba + Agsur;
 
 % Use the method given in Attachment E to calculate the troposcatter basic
 % transmission loss Lbs as given by equation (E.17)
-
-[Lbs, Thetas, Ztropo] = tl_troposcatter(GHz, dt, Thetat, Thetar, Thetae, Phicvn, Phicve, Phitn, Phite, Phirn, Phire, Gtx, Grx, Reff50, Tpcp);
-
-% To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
-
-Lbs = max(Lbs, Lbfs);
+if (~pdr)
+    [Lbs, Thetas, Ztropo] = tl_troposcatter(GHz, dt, Thetat, Thetar, Thetae, Phicvn, Phicve, Phitn, Phite, Phirn, Phire, ...
+                                            Gtx, Grx, Reff50, Tpcp);
+    
+    % To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
+    Lbs = max(Lbs, Lbfs);
+else   
+    % height of the Earth's surface above sea level where the common
+    % volume is located
+    Hs = surface_altitude_cv(h, d, Dtcv)/1000.0; % in km
+    [Lbs, Thetas] = tl_troposcatter_pdr(GHz, dt, Hts, Hrs, Reff50, Thetae, Thetat, Thetar, Phicvn, Phicve, Gtx, Grx, Tpcp, Hs);
+    % To avoid under-estimating troposcatter for short paths, limit Lbs (E.17)
+    Lbs = max(Lbs, Lbfs);   
+end
 
 % Perform the preliminary rain/wet-snow calculations in Attachment C.2 from
 % the transmitter to common-volume path segment with the following inputs (4.3.1)
@@ -645,7 +654,11 @@ p2001.Wave      =    Wave;
 p2001.Wvsurmid  =    Wvsurmid;
 p2001.Wvsurrx   =    Wvsurrx;
 p2001.Wvsurtx   =    Wvsurtx;
-p2001.Ztropo    =    Ztropo;
+if (~pdr)
+    p2001.Ztropo	=	Ztropo;
+else
+    p2001.Ztropo = 1;
+end
 
 
 return

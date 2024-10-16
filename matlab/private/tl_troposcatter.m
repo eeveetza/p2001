@@ -96,7 +96,6 @@ if climzone == 0
     
 end
 
-clear TropoClim
 
 % From Table E.1 assign meteorological and atmospheric parameters M,
 % gamma and equation

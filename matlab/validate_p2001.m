@@ -30,6 +30,8 @@ tol = 1e-6;
 success = 0;
 total = 0;
 
+pdr = true;
+
 %% compute the path profile parameters
 s = pwd;
 
@@ -98,7 +100,9 @@ for iname = 1 : length(filenames)
     FlagVP = zeros(nrows,1);
     Profile = cell(nrows,1);
     Lb_ref = zeros(nrows,1);
+    Lbs_ref = zeros(nrows,1);
     delta = zeros(nrows,1);
+    delta1 = zeros(nrows,1);
     
     for i = 1:nrows
         GHz(i)    = str2double(Y(i,2));
@@ -115,6 +119,7 @@ for iname = 1 : length(filenames)
         Profile{i} = Y{i,12};
         
         Lb_ref(i)    = str2double(Y(i,79));
+        Lbs_ref(i) = str2double(Y(i, 88 ));
 
     end
     
@@ -156,7 +161,7 @@ for iname = 1 : length(filenames)
         end
         
         p2001 = tl_p2001(d, h, z, GHz(i), Tpc(i), Phire(i), Phirn(i), Phite(i), Phitn(i), ...
-            Hrg(i), Htg(i), Grx(i), Gtx(i), FlagVP(i));
+            Hrg(i), Htg(i), Grx(i), Gtx(i), FlagVP(i), pdr);
         
         
         row = [...
@@ -177,9 +182,72 @@ for iname = 1 : length(filenames)
         A(i+1,:) = row;
         
         delta(i) = abs(p2001.Lb - Lb_ref(i));
+        delta1(i) = p2001.Lb - Lb_ref(i);
     end
     
+    if (iname == 1)
+        figure(1)
+        plot(Lb_ref, Lb_ref+delta1,'b.')
+        hold on
+        [ff1,xx1] = ksdensity(delta1);
+        figure(3)
+        histogram(delta1);
+        grid on
+        xlabel('L_{pdr p.2001} - L_{p.2001} (dB)')
+        title('Profile: b2iseac')
+
+        figure(5)
+        plot(d,h)
+        xlabel('d (km)')
+        ylabel('h (m)');
+        title('Profile: b2iseac')
+        grid on
+        
+    else
+        figure(2)
+        plot(Lb_ref, Lb_ref + delta1, 'r.')
+        hold on
+        [ff2,xx2] = ksdensity(delta1);
+        figure(4)
+        histogram(delta1)
+        grid on
+        xlabel('L_{pdr p.2001} - L_{p.2001} (dB)')
+        title('Profile: prof4')
+
+        figure(6)
+        plot(d,h)
+        xlabel('d (km)')
+        ylabel('h (m)');
+        title('Profile: prof4')
+        grid on
+    end
+    figure(1)
+    set(gca,'XLim', [80,250]);
+    set(gca,'YLim', [80,250]);
+    xlabel('L_{p.2001} (dB)');
+    ylabel('L_{pdr p.2001} (dB)' );
+    title('Profile: b2iseac')
+    plot(Lb_ref,Lb_ref,'k-')
+    plot(Lb_ref,Lb_ref-10, 'Color', [0.5, 0.5 0.5])
+    plot(Lb_ref,Lb_ref+10, 'Color', [0.5, 0.5 0.5])
     
+    grid on
+    hold on
+
+    figure(2)
+    set(gca,'XLim', [90,300]);
+    set(gca,'YLim', [90,300]);
+    xlabel('L_{p.2001} (dB)');
+    ylabel('L_{pdr p.2001} (dB)' );
+    title('Profile: prof4')
+    plot(Lb_ref,Lb_ref,'k-')
+    plot(Lb_ref,Lb_ref-10, 'Color', [0.5, 0.5 0.5])
+    plot(Lb_ref,Lb_ref+10, 'Color', [0.5, 0.5 0.5])
+    
+    grid on
+    hold on
+
+
     for i = 1 : nrows+1
         
         if i == 1
@@ -199,7 +267,7 @@ for iname = 1 : length(filenames)
     kk = find(abs(delta) > tol);
     if ~isempty(kk)
         for kki = 1:length(kk)
-            fprintf(1,'Maximum deviation found in step %d larger than tolerance %g:  %g\n', kk(kki), tol, delta(kk(kki)));
+            fprintf(1,'Maximum deviation found in step %d larger than tolerance %g:  %g   %g\n', kk(kki), tol, delta(kk(kki)), Lb_ref(kk(kki)));
             failed = true;
         end
     end
@@ -215,6 +283,8 @@ for iname = 1 : length(filenames)
     
     disp(['Results are written in the file: ' filename_out]);
 end
+
+
 fprintf(1,'Validation results: %d out of %d tests passed successfully.\n', success, total);
 if (success == total)
     fprintf(1,'The deviation from the reference results is smaller than %g dB.\n', tol);
