@@ -11,7 +11,7 @@ tl_p2001.m              - MATLAB function implementing Recommendation ITU-R P.20
   
 initiate_digital_maps.m - MATLAB script that processes the ITU-R maps and generates the necessary functions. 
                           a) Download and extract the required maps to `./private/maps` 
-                             From https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.452-18-202310-I!!ZIP-E.zip:
+                             From https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-4-202109-S!!ZIP-E.zip:
                                 DN_Median.txt		Esarain_Mt_v5.txt	FoEs10.txt		h0.txt
                                 DN_SubSlope.txt		Esarain_Pr6_v5.txt	FoEs50.txt		surfwv_50_fixed.txt
                                 DN_SupSlope.txt		FoEs0.1.txt		TropoClim.txt
