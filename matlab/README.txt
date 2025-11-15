@@ -1,17 +1,17 @@
-P2001 Version 4.1.1 (13.09.24)
+P2001 Version 6.0 (15.11.25)
 
-MATLAB implementation of Recommendation ITU-R P.2001-4
+MATLAB implementation of Recommendation ITU-R P.2001-6
 
 GENERAL NOTES
 --------------
 
 Files and subfolders in the distribution .zip package.
 
-tl_p2001.m              - MATLAB function implementing Recommendation ITU-R P.2001-4
+tl_p2001.m              - MATLAB function implementing Recommendation ITU-R P.2001-6
   
 initiate_digital_maps.m - MATLAB script that processes the ITU-R maps and generates the necessary functions. 
                           a) Download and extract the required maps to `./private/maps` 
-                             From https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-4-202109-S!!ZIP-E.zip:
+                             From https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-6-202509-I!!ZIP-E.zip:
                                 DN_Median.txt		Esarain_Mt_v5.txt	FoEs10.txt		h0.txt
                                 DN_SubSlope.txt		Esarain_Pr6_v5.txt	FoEs50.txt		surfwv_50_fixed.txt
                                 DN_SupSlope.txt		FoEs0.1.txt		TropoClim.txt
@@ -21,11 +21,11 @@ initiate_digital_maps.m - MATLAB script that processes the ITU-R maps and genera
 
 ./private/              - Folder containing the functions used by tl_p2001.m and validate_p2001*.m
  
-validate_p2001.m        - MATLAB scripts used to validate the implementation of Recommendation ITU-R P.2001-4
+validate_p2001.m        - MATLAB scripts used to validate the implementation of Recommendation ITU-R P.2001-6
                               as defined in the file tl_p2001.m using a set of test terrain profiles provided in
                               the folder ./validation_examples/
 
-./validation_examples/  - Folder containing validation examples for Recommendation ITU-R P.2001-4
+./validation_examples/  - Folder containing validation examples for Recommendation ITU-R P.2001-6
 
 ./validation_results/   - Folder containing the results of the validation tests using tl_p2001.m on the terrain
                                 profiles that correspond to the profiles defined in ./validation_examples/
@@ -33,6 +33,9 @@ validate_p2001.m        - MATLAB scripts used to validate the implementation of 
 
 UPDATES AND FIXES
 -----------------
+Version 6.0 (15.11.25)
+        - The source is identical to the Version 4.1.1, corresponding to Rec. ITU-R P.2001-6
+
 Version 4.1.1 (13.09.24)
         - Introduced functions and workflow for integrating ITU-R maps
 

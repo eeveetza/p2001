@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/459560677.svg)](https://zenodo.org/badge/latestdoi/459560677)
 
-This code repository contains a MATLAB/Octave software implementation of [Recommendation ITU-R P.2001-4](https://www.itu.int/rec/R-REC-P.2001/en) with a general purpose wide-range terrestrial propagation model in the frequency range 30 MHz to 50 GHz.  
+This code repository contains a MATLAB/Octave software implementation of [Recommendation ITU-R P.2001-6](https://www.itu.int/rec/R-REC-P.2001/en) with a general purpose wide-range terrestrial propagation model in the frequency range 30 MHz to 50 GHz.  
 
 This version of the code corresponds to the reference version approved by ITU-R Working Party 3M and published on [ITU-R SG 3 Software, Data, and Validation Web Page](https://www.itu.int/en/ITU-R/study-groups/rsg3/Pages/iono-tropo-spheric.aspx) as digital supplement to [Recommendation ITU-R P.2001](https://www.itu.int/rec/R-REC-P.2001/en).
  
@@ -11,7 +11,7 @@ The following table describes the structure of the folder `./matlab/` containing
 
 | File/Folder               | Description                                                         |
 |----------------------------|---------------------------------------------------------------------|
-|`tl_p2001.m`                | MATLAB function implementing Recommendation ITU-R P.2001-4         |      
+|`tl_p2001.m`                | MATLAB function implementing Recommendation ITU-R P.2001-6         |      
 |`initiate_digital_maps.m`| MATLAB script that processes the ITU-R maps and generates the necessary functions. It needs to be run prior to using this software implementation. For details, see [Integrating ITU Digital Products](#integrating-itu-digital-products). |     
 |`validate_p2001.m`                  | MATLAB scripts used to validate this implementation using a set of test terrain profiles provided in `./validation_examples/` |   
 |`./validation_examples/`    | Folder containing validation examples for Recommendation ITU-R P.2001-4 |
@@ -27,7 +27,7 @@ This software uses ITU digital products that are integral part of Recommendation
 
 1. **Download and extract the required maps** to `./private/maps`:
 
-   - From [ITU-R P.2001-4](https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-4-202109-S!!ZIP-E.zip):
+   - From [ITU-R P.2001-6](https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-6-202509-I!!ZIP-E.zip):
      - `DN_Median.txt`
      - `DN_SubSlope.txt`
      - `DN_SupSlope.txt`	

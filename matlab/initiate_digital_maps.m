@@ -9,7 +9,7 @@
 % necessary functions that contain the digital maps and are used for
 % interpolations.
 % The following maps should be extracted in the folder ./private/maps:
-% From https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-4-202109-S!!ZIP-E.zip
+% From ITU-R P.2001-6 (https://www.itu.int/dms_pubrec/itu-r/rec/p/R-REC-P.2001-6-202509-I!!ZIP-E.zip)
 %  DN_Median.txt              Esarain_Mt_v5.txt	FoEs10.txt		h0.txt
 %  DN_SubSlope.txt            Esarain_Pr6_v5.txt	FoEs50.txt		surfwv_50_fixed.txt
 %  DN_SupSlope.txt            FoEs0.1.txt		    TropoClim.txt
@@ -43,7 +43,7 @@ for i  = 1 : length(files)
         fid = fopen(filename, "r");
 
         if(fid==-1)
-            errorstr = sprintf('Download and extract the required map %s from ITU-R P.2001-4 to ./private/maps', xx);
+            errorstr = sprintf('Download and extract the required map %s from ITU-R P.2001-6 to ./private/maps', xx);
             error(errorstr);
 
         end

@@ -1,5 +1,5 @@
 % MATLAB/Octave script that is used to verify the implementation of
-% Recommendation ITU-R P.P2001-4 (as defined in the file tl_p2001.m and the
+% Recommendation ITU-R P.P2001-6 (as defined in the file tl_p2001.m and the
 % functions called therefrom) using a set of test terrain profiles provided by the user.
 %
 % The script reads all the test profiles from the folder defined by

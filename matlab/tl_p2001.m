@@ -1,5 +1,5 @@
 function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Htg, Grx, Gtx, FlagVP) 
-%tl_p2001 WRPM in the frequency range 30 MHz to 50 GHz ITU-R P.2001-4
+%tl_p2001 WRPM in the frequency range 30 MHz to 50 GHz ITU-R P.2001-6
 %   This function computes path loss due to both signal enhancements and fading 
 %   over the range from 0% to 100% of an average year according to the
 %   general purpose wide-range model as described in Recommendation ITU-R
@@ -179,6 +179,7 @@ function p2001 = tl_p2001(d, h, z, GHz, Tpc, Phire, Phirn, Phite, Phitn, Hrg, Ht
 %                                                       Renaming subfolder "src" into "private" which is automatically in the MATLAB search path
 %                                                       (as suggested by K. Konstantinou, Ofcom UK)   
 %     v6    20APR23     Ivica Stevanovic, OFCOM         introduced get_interp2 to increase computational speed
+%     v7    15NOV25     Ivica Stevanovic, OFCOM         ITU-R P.2001-6 (the source identical to ITU-R P.2001-4)
 
 
 %%
